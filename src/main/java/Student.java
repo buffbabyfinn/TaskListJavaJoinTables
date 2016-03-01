@@ -24,7 +24,7 @@ public class Student {
     return enrollment_date;
   }
 
-  public Student(String first_name, String last_lame) {
+  public Student(String first_name, String last_name) {
     this.first_name = first_name;
     this.last_name = last_name;
   }
@@ -47,38 +47,55 @@ public class Student {
     }
   }
 
-  // public void save() {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String sql = "INSERT INTO Categories(name) VALUES (:name)";
-  //     this.id = (int) con.createQuery(sql, true)
-  //       .addParameter("name", this.name)
-  //       .executeUpdate()
-  //       .getKey();
-  //   }
-  // }
-  //
-  // public void deleteCategory() {
-  //   String sql = "DELETE FROM Categories WHERE id=:id";
-  //   try(Connection con = DB.sql2o.open()) {
-  //     con.createQuery(sql)
-  //     .addParameter("id", id)
-  //     .executeUpdate();
-  //     String joinDeleteQuery = "DELETE FROM categories_tasks WHERE category_id = :categoryId";
-  //     con.createQuery(joinDeleteQuery)
-  //       .addParameter("categoryId", id)
-  //       .executeUpdate();
-  //   }
-  // }
-  //
-  // public static Category find(int id) {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String sql = "SELECT * FROM Categories where id=:id";
-  //     Category Category = con.createQuery(sql)
-  //       .addParameter("id", id)
-  //       .executeAndFetchFirst(Category.class);
-  //     return Category;
-  //   }
-  // }
+  public void save() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO students(first_name, last_name) VALUES (:first_name, :last_name)";
+      this.id = (int) con.createQuery(sql, true)
+        .addParameter("first_name", this.first_name)
+        .addParameter("last_name", this.last_name)
+        .executeUpdate()
+        .getKey();
+    }
+  }
+
+  public void deleteStudent() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM students WHERE id = :id";
+      con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+
+      String studentCourseDeleteQuery = "DELETE FROM students_courses WHERE student_id = :student_id";
+      con.createQuery(studentCourseDeleteQuery)
+        .addParameter("student_id", id)
+        .executeUpdate();
+
+      String studentDepartmentDeleteQuery = "DELETE FROM students_departments WHERE student_id = :student_id";
+      con.createQuery(studentDepartmentDeleteQuery)
+        .addParameter("student_id", id)
+        .executeUpdate();
+    }
+  }
+
+  public static Student find(int id) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM students where id = :id";
+      Student student = con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Student.class);
+      return student;
+    }
+  }
+
+  public void setEnrollmentDate(String enrollment_date) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE students SET enrollment_date = :enrollment_date WHERE id = :id";
+      con.createQuery(sql)
+      .addParameter("enrollment_date", enrollment_date)
+      .addParameter("id", id)
+      .executeUpdate();
+    }
+  }
   //
   // public void addTask(Task task) {
   //   try(Connection con = DB.sql2o.open()) {

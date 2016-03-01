@@ -19,4 +19,43 @@ public class StudentTest {
     Student secondStudent = new Student("Daren", "Schaad");
     assertTrue(firstStudent.equals(secondStudent));
   }
+
+  @Test
+  public void save_savesIntoDatabase() {
+    Student firstStudent = new Student("Daren", "Schaad");
+    firstStudent.save();
+    assertTrue(Student.all().get(0).equals(firstStudent));
+  }
+
+  @Test
+  public void all_returnsAllStudents() {
+    Student firstStudent = new Student("Daren", "Schaad");
+    firstStudent.save();
+    assertEquals(Student.all().size(), 1);
+  }
+
+  @Test
+  public void find_findStudentInDatabase() {
+  Student firstStudent = new Student("Daren", "Schaad");
+  firstStudent.save();
+  Student savedStudent = Student.find(firstStudent.getId());
+  assertTrue(firstStudent.equals(savedStudent));
+  }
+
+  @Test
+  public void delete_deletesStudentFromDatabase() {
+    Student myStudent = new Student("Megan", "Fayer");
+    myStudent.save();
+    myStudent.deleteStudent();
+    assertEquals(Student.all().size(), 0);
+  }
+
+  @Test
+  public void setEnrollmentDate_setsDateStudentsEnrolled() {
+    String enrollment_date = "2016/05/30";
+    Student myStudent = new Student("Megan", "Fayer");
+    myStudent.save();
+    myStudent.setEnrollmentDate(enrollment_date);
+    assertEquals(Student.all().get(0).getEnrollmentDate(), "2016/05/30");
+  }
 }
