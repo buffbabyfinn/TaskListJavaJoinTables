@@ -58,4 +58,18 @@ public class StudentTest {
     myStudent.setEnrollmentDate(enrollment_date);
     assertEquals(Student.all().get(0).getEnrollmentDate(), "2016/05/30");
   }
+
+  @Test
+  public void addCourse_addsCourseToStudentInJoinTable() {
+    Student myStudent = new Student("Megan", "Fayer");
+    myStudent.save();
+    Course testCourse = new Course("PE", "PE4567");
+    testCourse.save();
+    myStudent.addCourse(testCourse);
+    Course savedCourse = myStudent.getCourses().get(0);
+    assertTrue(testCourse.equals(savedCourse));
+    assertEquals(myStudent.getCourses().get(0), testCourse);
+  }
+
+
 }

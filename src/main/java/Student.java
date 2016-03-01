@@ -96,37 +96,37 @@ public class Student {
       .executeUpdate();
     }
   }
-  //
-  // public void addTask(Task task) {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String sql = "INSERT INTO categories_tasks (category_id, task_id) VALUES (:category_id, :task_id)";
-  //     con.createQuery(sql)
-  //       .addParameter("category_id", this.getId())
-  //       .addParameter("task_id", task.getId())
-  //       .executeUpdate();
-  //   }
-  // }
-  //
-  // public ArrayList<Task> getTasks() {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String sql = "SELECT task_id FROM categories_tasks  JOIN tasks ON (tasks.id = categories_tasks.task_id) WHERE category_id = :category_id ORDER BY description";
-  //     List<Integer> taskIds = con.createQuery(sql)
-  //       .addParameter("category_id", this.getId())
-  //       .executeAndFetch(Integer.class);
-  //
-  //     ArrayList<Task> tasks = new ArrayList<Task>();
-  //
-  //     for (Integer taskId : taskIds) {
-  //       String taskQuery = "Select * FROM tasks WHERE id = :taskId ORDER BY description";
-  //       Task task = con.createQuery(taskQuery)
-  //         .addParameter("taskId", taskId)
-  //         .executeAndFetchFirst(Task.class);
-  //       tasks.add(task);
-  //     }
-  //     return tasks;
-  //   }
-  // }
-  //
+
+  public void addCourse(Course course) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO students_courses (student_id, course_id) VALUES (:student_id, :course_id)";
+      con.createQuery(sql)
+        .addParameter("student_id", this.getId())
+        .addParameter("course_id", course.getId())
+        .executeUpdate();
+    }
+  }
+
+  public ArrayList<Course> getCourses() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT course_id FROM students_courses WHERE student_id = :student_id";
+      List<Integer> courseIds = con.createQuery(sql)
+        .addParameter("student_id", this.getId())
+        .executeAndFetch(Integer.class);
+
+      ArrayList<Course> courses = new ArrayList<Course>();
+
+      for (Integer courseId : courseIds) {
+        String courseQuery = "Select * FROM courses WHERE id = :courseId ORDER BY course_name";
+        Course course = con.createQuery(courseQuery)
+          .addParameter("courseId", courseId)
+          .executeAndFetchFirst(Course.class);
+        courses.add(course);
+      }
+      return courses;
+    }
+  }
+
   // public void removeTask(int taskId) {
   //   try(Connection con = DB.sql2o.open()){
   //     String sql ="DELETE FROM categories_tasks WHERE category_id =  :categoryId AND task_id = :taskId";      con.createQuery(sql)

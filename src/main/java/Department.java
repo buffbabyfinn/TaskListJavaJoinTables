@@ -11,7 +11,7 @@ public class Department {
     return id;
   }
 
-  public String getName() {
+  public String getDepartmentName() {
     return department_name;
   }
 
@@ -20,70 +20,73 @@ public class Department {
     this.department_name = department_name;
   }
 
-  // @Override
-  // public boolean equals(Object otherTask){
-  //   if (!(otherTask instanceof Task)) {
-  //     return false;
-  //   } else {
-  //     Task newTask = (Task) otherTask;
-  //     return this.getDescription().equals(newTask.getDescription()) &&
-  //            this.getId() == newTask.getId() &&
-  //            this.getDue() == newTask.getDue() &&
-  //            this.getCompletionStatus() == newTask.getCompletionStatus();
-  //   }
-  // }
-  //
-  //
-  // public static List<Task> all() {
-  //   String sql = "SELECT * FROM tasks ORDER BY complete, due, description";
-  //   try(Connection con = DB.sql2o.open()) {
-  //     return con.createQuery(sql).executeAndFetch(Task.class);
-  //   }
-  // }
-  //
-  // public void save() {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String sql = "INSERT INTO tasks(description, complete) VALUES (:description, :complete)";
-  //     this.id = (int) con.createQuery(sql, true)
-  //       .addParameter("description", description)
-  //       .addParameter("complete", complete)
-  //       .executeUpdate()
-  //       .getKey();
-  //   }
-  // }
-  //
-  // public static Task find(int id) {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String sql = "SELECT * FROM tasks where id=:id";
-  //     Task task = con.createQuery(sql)
-  //       .addParameter("id", id)
-  //       .executeAndFetchFirst(Task.class);
-  //     return task;
-  //   }
-  // }
-  //
-  // public void update(String description) {
-  //   try(Connection con = DB.sql2o.open()) {
-  //     String sql = "UPDATE tasks SET description = :description WHERE id = :id";
-  //     con.createQuery(sql)
-  //       .addParameter("description", description)
-  //       .addParameter("id", id)
-  //       .executeUpdate();
-  //   }
-  // }
-  //
-  // public void delete() {
-  //   String sql = "DELETE FROM tasks WHERE id = :id";
-  //   try(Connection con = DB.sql2o.open()) {
-  //     con.createQuery(sql)
-  //       .addParameter("id", id)
-  //       .executeUpdate();
-  //   String joinDeleteQuery = "DELETE FROM categories_tasks WHERE task_id = :taskId";
-  //   con.createQuery(joinDeleteQuery)
-  //     .addParameter("taskId", id)
-  //     .executeUpdate();
-  //   }
-  // }
+  @Override
+  public boolean equals(Object otherDepartment){
+    if (!(otherDepartment instanceof Department)) {
+      return false;
+    } else {
+      Department newDepartment = (Department) otherDepartment;
+      return this.getDepartmentName().equals(newDepartment.getDepartmentName()) &&
+             this.getId() == newDepartment.getId();
+    }
+  }
+
+
+  public static List<Department> all() {
+    String sql = "SELECT * FROM departments ORDER BY department_name";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetch(Department.class);
+    }
+  }
+
+  public void save() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO departments (department_name) VALUES (:department_name)";
+      this.id = (int) con.createQuery(sql, true)
+        .addParameter("department_name", department_name)
+        .executeUpdate()
+        .getKey();
+    }
+  }
+
+  public static Department find(int id) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM departments where id=:id";
+      Department department = con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Department.class);
+      return department;
+    }
+  }
+
+  public void update(String department_name) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE departments SET department_name = :department_name WHERE id = :id";
+      con.createQuery(sql)
+        .addParameter("department_name", department_name)
+        .addParameter("id", id)
+        .executeUpdate();
+    }
+  }
+
+  public void delete() {
+    String sql = "DELETE FROM departments WHERE id = :id";
+    try(Connection con = DB.sql2o.open()) {
+      con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+
+    String joinStudentsDeleteQuery = "DELETE FROM students_departments WHERE department_id = :departmentId";
+    con.createQuery(joinStudentsDeleteQuery)
+      .addParameter("departmentId", id)
+      .executeUpdate();
+
+    String joinCoursesDeleteQuery = "DELETE FROM courses_departments WHERE department_id = :departmentId";
+    con.createQuery(joinCoursesDeleteQuery)
+      .addParameter("departmentId", id)
+      .executeUpdate();
+    }
+  }
   // public List<Task> getAllTasks() {
   //   try(Connection con = DB.sql2o.open()) {
   //     String sql = "SELECT * FROM tasks ORDER BY description";
