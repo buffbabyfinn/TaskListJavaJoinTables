@@ -17,7 +17,7 @@ public class Student {
   }
 
   public String getLastName() {
-    return first_name;
+    return last_name;
   }
 
   public String getEnrollmentDate() {
@@ -99,10 +99,11 @@ public class Student {
 
   public void addCourse(Course course) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO students_courses (student_id, course_id) VALUES (:student_id, :course_id)";
+      String sql = "INSERT INTO students_courses (student_id, course_id, complete) VALUES (:student_id, :course_id, :complete)";
       con.createQuery(sql)
         .addParameter("student_id", this.getId())
         .addParameter("course_id", course.getId())
+        .addParameter("complete", false)
         .executeUpdate();
     }
   }
@@ -124,6 +125,36 @@ public class Student {
         courses.add(course);
       }
       return courses;
+    }
+  }
+
+  public void addDepartment(Department department) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO students_departments (student_id, department_id) VALUES (:student_id, :department_id)";
+      con.createQuery(sql)
+        .addParameter("student_id", this.getId())
+        .addParameter("department_id", department.getId())
+        .executeUpdate();
+    }
+  }
+
+  public ArrayList<Department> getDepartments() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT department_id FROM students_departments WHERE student_id = :student_id";
+      List<Integer> departmentIds = con.createQuery(sql)
+        .addParameter("student_id", this.getId())
+        .executeAndFetch(Integer.class);
+
+      ArrayList<Department> departments = new ArrayList<Department>();
+
+      for (Integer departmentId : departmentIds) {
+        String departmentQuery = "Select * FROM departments WHERE id = :departmentId ORDER BY department_name";
+        Department department = con.createQuery(departmentQuery)
+          .addParameter("departmentId", departmentId)
+          .executeAndFetchFirst(Department.class);
+        departments.add(department);
+      }
+      return departments;
     }
   }
 

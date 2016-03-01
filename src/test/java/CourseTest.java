@@ -44,4 +44,26 @@ public class CourseTest {
     myCourse.deleteCourse();
     assertEquals(Course.all().size(), 0);
   }
+
+  @Test
+  public void addStudent_addsStudentToCourseInJoinTable() {
+    Student myStudent = new Student("Megan", "Fayer");
+    myStudent.save();
+    Course myCourse = new Course("PE", "PE4567");
+    myCourse.save();
+    myCourse.addStudent(myStudent);
+    Student savedStudent = myCourse.getStudents().get(0);
+    assertTrue(myStudent.equals(savedStudent));
+  }
+
+  @Test
+  public void addDepartment_addsDepartmentToCourseInJoinTable() {
+    Department myDepartment = new Department("Test");
+    myDepartment.save();
+    Course myCourse = new Course("PE", "PE4567");
+    myCourse.save();
+    myCourse.addDepartment(myDepartment);
+    Department savedDepartment = myCourse.getDepartments().get(0);
+    assertTrue(myDepartment.equals(savedDepartment));
+  }
 }

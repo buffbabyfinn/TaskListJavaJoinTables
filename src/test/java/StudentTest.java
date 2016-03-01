@@ -71,5 +71,17 @@ public class StudentTest {
     assertEquals(myStudent.getCourses().get(0), testCourse);
   }
 
+  @Test
+  public void addDepartment_addsDepartmentToStudentInJoinTable() {
+    Student myStudent = new Student("Megan", "Fayer");
+    myStudent.save();
+    Department testDepartment = new Department("PE");
+    testDepartment.save();
+    myStudent.addDepartment(testDepartment);
+    Department savedDepartment = myStudent.getDepartments().get(0);
+    assertTrue(testDepartment.equals(savedDepartment));
+    assertEquals(savedDepartment, testDepartment);
+  }
+
 
 }

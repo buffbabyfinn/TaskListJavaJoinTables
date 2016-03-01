@@ -12,12 +12,29 @@ public class App {
     String layout = "templates/layout.vtl";
 
 
-//     get("/", (request, response) -> {
-//       HashMap<String, Object> model = new HashMap<String, Object>();
-//       model.put("categories", Category.all());
-//       model.put("template", "templates/index.vtl");
-//       return new ModelAndView(model, layout);
-//     }, new VelocityTemplateEngine());
+    get("/", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("students", Student.all());
+      model.put("template", "templates/index.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/", (request, response) -> {
+      String firstName = request.queryParams("studentFirstName");
+      String lastName = request.queryParams("studentLastName");
+      Student newStudent = new Student(firstName, lastName);
+      newStudent.save();
+      response.redirect("/");
+      return null;
+    });
+
+    post("/student/:id/delete", (request, response) -> {
+      int studentId = Integer.parseInt(request.params("id"));
+      Student student = Student.find(studentId);
+      student.deleteStudent();
+      response.redirect("/");
+      return null;
+    });
 //
 //     get("/tasks", (request, response) -> {
 //       HashMap<String, Object> model = new HashMap<String, Object>();

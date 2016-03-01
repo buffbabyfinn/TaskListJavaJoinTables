@@ -50,4 +50,26 @@ public class DepartmentTest {
     assertEquals(Department.all().size(), 0);
   }
 
+  @Test
+  public void addStudent_addsStudentToDepartmentInJoinTable() {
+    Student myStudent = new Student("Megan", "Fayer");
+    myStudent.save();
+    Department myDepartment = new Department("Physics");
+    myDepartment.save();
+    myDepartment.addStudent(myStudent);
+    Student savedStudent = myDepartment.getStudents().get(0);
+    assertTrue(myStudent.equals(savedStudent));
+  }
+
+  @Test
+  public void addCourse_addsCourseToDepartmentInJoinTable() {
+    Course myCourse = new Course("Megan", "Fayer");
+    myCourse.save();
+    Department myDepartment = new Department("Physics");
+    myDepartment.save();
+    myDepartment.addCourse(myCourse);
+    Course savedCourse = myDepartment.getCourses().get(0);
+    assertTrue(myCourse.equals(savedCourse));
+  }
+
 }
