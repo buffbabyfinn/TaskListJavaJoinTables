@@ -3,7 +3,7 @@ index.vtl
 <h3>Students:</h3>
 #foreach($student in $students)
   <form class="form-inline" id = "delete$student.getId()" action="/student/$student.getId()/delete" method="post">
-    <h4><a href="/$student.getId()">$student.getLastName(), $student.getFirstName()</a>
+    <h4><a href="/student/$student.getId()">$student.getLastName(), $student.getFirstName()</a>
     <button type="submit" class="btn btn-xs btn-danger delete">Delete $student.getFirstName()</button>
   </form>
 #end
